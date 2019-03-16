@@ -1,5 +1,6 @@
 package comp1206.sushi.server;
 
+import java.awt.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,8 @@ public class ServerWindow extends JFrame implements UpdateListener {
 
 	private static final long serialVersionUID = -4661566573959270000L;
 	private ServerInterface server;
+
+	private static final String[] TABLES = {"Postcodes", "Drones", "Staff"};
 	
 	/**
 	 * Create a new server window
@@ -32,6 +35,9 @@ public class ServerWindow extends JFrame implements UpdateListener {
 		setSize(800,600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		setupWindow();
+
 		setVisible(true);
 		
 		//Start timed updates
@@ -62,5 +68,26 @@ public class ServerWindow extends JFrame implements UpdateListener {
 	public void updated(UpdateEvent updateEvent) {
 		refreshAll();
 	}
-	
+
+	public void setupWindow()
+	{
+		JPanel panel = new JPanel();
+		this.setContentPane(panel);
+		panel.setLayout(new BorderLayout());
+
+		TableView view = new TableView(TABLES);
+		panel.add(view, BorderLayout.CENTER);
+
+		// TODO: Refactor into GridBagLayout or BoxLayout.
+		JPanel btnPanel = new JPanel();
+		btnPanel.setLayout(new GridLayout());
+
+		JButton btnAdd = new JButton("Add");
+		btnPanel.add(btnAdd);
+
+		JButton btnDelete = new JButton("Delete");
+		btnPanel.add(btnDelete);
+
+		panel.add(btnPanel, BorderLayout.SOUTH);
+	}
 }
