@@ -19,7 +19,7 @@ public class ServerWindow extends JFrame implements UpdateListener {
 	private static final long serialVersionUID = -4661566573959270000L;
 	private ServerInterface server;
 
-	private static final String[] TABLES = {"Postcodes", "Drones", "Staff"};
+	private static final String[] TABLES = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Configuration"};
 	
 	/**
 	 * Create a new server window

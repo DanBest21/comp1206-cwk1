@@ -25,7 +25,7 @@ public class TableView extends JTabbedPane
         JTable table = new JTable(model);
 
         // TODO: Remove test code.
-        String[] test = {"test", "Test"};
+        String[] test = {"Test", "Test"};
         model.addColumn("Column 1");
         model.addColumn("Column 2");
         model.addRow(test);
