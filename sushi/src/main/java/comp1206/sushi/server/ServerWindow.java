@@ -19,7 +19,9 @@ public class ServerWindow extends JFrame implements UpdateListener {
 	private static final long serialVersionUID = -4661566573959270000L;
 	private ServerInterface server;
 
-	private static final String[] TABLES = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Configuration"};
+	private ImageIcon img = new ImageIcon("icon.png");
+
+	private static final String[] TABS = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Configuration"};
 	
 	/**
 	 * Create a new server window
@@ -71,16 +73,20 @@ public class ServerWindow extends JFrame implements UpdateListener {
 
 	public void setupWindow()
 	{
+		this.setIconImage(img.getImage());
+
 		JPanel panel = new JPanel();
 		this.setContentPane(panel);
 		panel.setLayout(new BorderLayout());
+		panel.setBackground(Color.WHITE);
 
-		TableView view = new TableView(TABLES);
+		TableView view = new TableView(TABS);
 		panel.add(view, BorderLayout.CENTER);
 
 		// TODO: Refactor into GridBagLayout or BoxLayout.
 		JPanel btnPanel = new JPanel();
 		btnPanel.setLayout(new GridLayout());
+		btnPanel.setBackground(Color.WHITE);
 
 		JButton btnAdd = new JButton("Add");
 		btnPanel.add(btnAdd);

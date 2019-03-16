@@ -61,9 +61,15 @@ public class MockServer implements ServerInterface {
 		addStaff("Staff 2");
 		addStaff("Staff 3");
 		
-		addDrone(1);
+		Drone drone1 = addDrone(1);
+		drone1.setStatus(getDroneStatus(drone1));
+		drone1.setDestination(postcode3);
+		drone1.setSource(postcode2);
+		drone1.setProgress(5);
 		addDrone(2);
 		addDrone(3);
+
+
 	}
 	
 	@Override
