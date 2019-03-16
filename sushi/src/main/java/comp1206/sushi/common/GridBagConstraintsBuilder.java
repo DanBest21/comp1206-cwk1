@@ -1,4 +1,4 @@
-package comp1206.sushi.server;
+package comp1206.sushi.common;
 
 import java.awt.*;
 
