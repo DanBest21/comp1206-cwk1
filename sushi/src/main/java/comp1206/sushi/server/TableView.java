@@ -22,8 +22,6 @@ public class TableView extends JTabbedPane
 
     public TableView(String[] tabs)
     {
-        int i = 0;
-
         for (String tab : tabs)
         {
             JScrollPane table = generateTable(tab);
