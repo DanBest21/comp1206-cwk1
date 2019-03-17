@@ -50,10 +50,9 @@ public class ButtonPanel extends JPanel
                 break;
 
             case "Dishes":
-                buttons = new JButton[3];
+                buttons = new JButton[2];
                 buttons[0] = new JButton("Add Dish");
                 buttons[1] = new JButton("Edit Dish");
-                buttons[2] = new JButton("Remove Dish");
                 break;
 
             case "Orders":

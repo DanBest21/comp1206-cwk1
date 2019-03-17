@@ -113,12 +113,20 @@ public class TableView extends JTabbedPane
             return;
         }
 
-        List<String> columns = new ArrayList<>();
+        List<String> columns = generateColumns(data);
+        Collections.sort(columns, (o1, o2) -> {
+            if (o1.equals(o2)) // update to make it stable
+                return 0;
+            if (o1.equals("Name"))
+                return -1;
+            if (o2.equals("Name"))
+                return 1;
+            return o1.compareTo(o2);
+        });
 
-        for (StringBuilder column : generateColumns(data))
+        for (String column : columns)
         {
             model.addColumn(column);
-            columns.add(column.toString());
         }
 
         Map<Integer, List<String>> rows = populateRows(columns, data);
@@ -130,11 +138,13 @@ public class TableView extends JTabbedPane
             List<String> row = (List<String>)entry.getValue();
             model.addRow(row.toArray());
         }
+
+        formatTable();
     }
 
-    private List<StringBuilder> generateColumns(List<? extends Model> data)
+    private List<String> generateColumns(List<? extends Model> data)
     {
-        List<StringBuilder> columns = new ArrayList<>();
+        List<String> columns = new ArrayList<>();
 
         for (Method method : data.get(0).getClass().getMethods())
         {
@@ -164,7 +174,7 @@ public class TableView extends JTabbedPane
                     i++;
                 }
 
-                columns.add(sb);
+                columns.add(sb.toString());
             }
         }
 
@@ -214,7 +224,6 @@ public class TableView extends JTabbedPane
             rows.put(i, fields);
         }
 
-        updateRowHeights();
         return rows;
     }
 
@@ -247,7 +256,7 @@ public class TableView extends JTabbedPane
                     Map.Entry entry = (Map.Entry)iterator.next();
                     String key = (String)entry.getKey();
                     Double value = (Double)entry.getValue();
-                    formattedOutput = formattedOutput + key + ": " + value.toString() + (iterator.hasNext() ? "<br>" : "");
+                    formattedOutput = formattedOutput + (key == "lon" ? "Longitude" : "Latitude") + ": " + value.toString() + (iterator.hasNext() ? "<br>" : "");
                 }
                 break;
         }
@@ -257,14 +266,19 @@ public class TableView extends JTabbedPane
         return formattedOutput;
     }
 
-    private void updateRowHeights()
+    private void formatTable()
     {
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setVerticalAlignment(SwingConstants.NORTH);
+
         for (int row = 0; row < table.getRowCount(); row++)
         {
             int rowHeight = table.getRowHeight();
 
             for (int column = 0; column < table.getColumnCount(); column++)
             {
+                table.getColumnModel().getColumn(column).setCellRenderer(renderer);
+
                 Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
                 rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
             }
