@@ -1,5 +1,6 @@
 package comp1206.sushi.server;
 
+import comp1206.sushi.common.Ingredient;
 import comp1206.sushi.common.Model;
 import comp1206.sushi.mock.MockServer;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class TableView extends JTabbedPane
 {
     private HashMap<String, JScrollPane> tabs = new HashMap<>();
+    private JTable table;
     private Color red = new Color(170, 50, 50);
     private Font titleFont = new Font("Viner Hand ITC", Font.BOLD, 20);
     private Font font = new Font("Courier New", Font.PLAIN, 16);
@@ -36,10 +38,11 @@ public class TableView extends JTabbedPane
     private JScrollPane generateTable(String tab)
     {
         DefaultTableModel model = new DefaultTableModel();
-        JTable table = new JTable(model);
+        table = new JTable(model);
 
         table.setFont(font);
         table.setRowHeight(16);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setOpaque(false);
@@ -184,7 +187,16 @@ public class TableView extends JTabbedPane
                     try
                     {
                         Object output = method.invoke(data.get(i));
-                        fields.add(output == null ? null : output.toString());
+
+                        if (columns.get(j).equals("Recipe") || columns.get(j).equals("Lat/Long"))
+                        {
+                            String formattedOutput = handleMapObject(columns.get(j), (Map)output);
+                            fields.add(formattedOutput);
+                        }
+                        else
+                        {
+                            fields.add(output == null ? null : output.toString());
+                        }
                         j++;
                     }
                     catch (ReflectiveOperationException ex)
@@ -202,6 +214,62 @@ public class TableView extends JTabbedPane
             rows.put(i, fields);
         }
 
+        updateRowHeights();
         return rows;
+    }
+
+    private String handleMapObject(String field, Map map)
+    {
+        String formattedOutput = "<html>";
+        Iterator iterator;
+
+        switch (field)
+        {
+            case "Recipe":
+                Map<Ingredient, Number> recipe = map;
+                iterator = recipe.entrySet().iterator();
+
+                while (iterator.hasNext())
+                {
+                    Map.Entry entry = (Map.Entry)iterator.next();
+                    Ingredient key = (Ingredient)entry.getKey();
+                    Number value = (Number)entry.getValue();
+                    formattedOutput = formattedOutput + value.toString() + "x " + key.toString() + (iterator.hasNext() ? "<br>" : "");
+                }
+                break;
+
+            case "Lat/Long":
+                Map<String, Double> latlong = map;
+                iterator = latlong.entrySet().iterator();
+
+                while (iterator.hasNext())
+                {
+                    Map.Entry entry = (Map.Entry)iterator.next();
+                    String key = (String)entry.getKey();
+                    Double value = (Double)entry.getValue();
+                    formattedOutput = formattedOutput + key + ": " + value.toString() + (iterator.hasNext() ? "<br>" : "");
+                }
+                break;
+        }
+
+        formattedOutput = formattedOutput + "</html>";
+
+        return formattedOutput;
+    }
+
+    private void updateRowHeights()
+    {
+        for (int row = 0; row < table.getRowCount(); row++)
+        {
+            int rowHeight = table.getRowHeight();
+
+            for (int column = 0; column < table.getColumnCount(); column++)
+            {
+                Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+                rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+            }
+
+            table.setRowHeight(row, rowHeight);
+        }
     }
 }

@@ -46,7 +46,7 @@ public class ButtonPanel extends JPanel
             case "Suppliers":
             case "Ingredients":
                 buttons = new JButton[1];
-                buttons[0] = new JButton("Add " + ((tab.charAt(tab.length() - 1) == 's') ? tab.substring(0, tab.length() - 1) : tab));
+                buttons[0] = new JButton("Add " + tab.substring(0, tab.length() - 1));
                 break;
 
             case "Dishes":
