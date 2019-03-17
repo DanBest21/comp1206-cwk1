@@ -4,9 +4,11 @@ import comp1206.sushi.common.Model;
 import comp1206.sushi.mock.MockServer;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.*;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.List;
@@ -14,14 +16,22 @@ import java.util.List;
 public class TableView extends JTabbedPane
 {
     private HashMap<String, JScrollPane> tabs = new HashMap<>();
+    private Color red = new Color(170, 50, 50);
+    private Font titleFont = new Font("Viner Hand ITC", Font.BOLD, 20);
+    private Font font = new Font("Courier New", Font.PLAIN, 16);
 
     public TableView(String[] tabs)
     {
+        int i = 0;
+
         for (String tab : tabs)
         {
             JScrollPane table = generateTable(tab);
             this.tabs.put(tab, table);
             this.addTab(tab, this.tabs.get(tab));
+
+            this.setOpaque(false);
+            this.setFont(titleFont.deriveFont((float)16).deriveFont(Font.PLAIN));
         }
     }
 
@@ -30,11 +40,24 @@ public class TableView extends JTabbedPane
         DefaultTableModel model = new DefaultTableModel();
         JTable table = new JTable(model);
 
+        table.setFont(font);
+        table.setRowHeight(16);
+
+        JTableHeader tableHeader = table.getTableHeader();
+        tableHeader.setOpaque(false);
+        tableHeader.setBackground(red);
+        tableHeader.setForeground(Color.WHITE);
+        tableHeader.setFont(titleFont);
+
         loadData(tab, model);
+
+        table.setDefaultEditor(Object.class, null);
 
         JScrollPane pane = new JScrollPane(table);
         pane.setLayout(new ScrollPaneLayout());
         pane.setMinimumSize(new Dimension(800, 400));
+        pane.setBackground(Color.WHITE);
+        pane.getViewport().setBackground(Color.WHITE);
 
         return pane;
     }

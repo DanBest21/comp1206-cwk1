@@ -49,6 +49,7 @@ public class MockServer implements ServerInterface {
 		Dish dish3 = addDish("Dish 3","Dish 3",3,1,10);
 		
 		orders.add(new Order());
+		users.add(new User("kh3dg37", "thebestwizard1337", "1 Citadel Road, Dalaran", postcode5));
 
 		addIngredientToDish(dish1,ingredient1,1);
 		addIngredientToDish(dish1,ingredient2,2);

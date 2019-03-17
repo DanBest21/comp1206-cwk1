@@ -84,16 +84,9 @@ public class ServerWindow extends JFrame implements UpdateListener {
 		panel.add(view, BorderLayout.CENTER);
 
 		// TODO: Refactor into GridBagLayout or BoxLayout.
-		JPanel btnPanel = new JPanel();
-		btnPanel.setLayout(new GridLayout());
-		btnPanel.setBackground(Color.WHITE);
-
-		JButton btnAdd = new JButton("Add");
-		btnPanel.add(btnAdd);
-
-		JButton btnDelete = new JButton("Delete");
-		btnPanel.add(btnDelete);
-
+		JPanel btnPanel = new ButtonPanel(view);
 		panel.add(btnPanel, BorderLayout.SOUTH);
+
+		view.addChangeListener(e -> ((ButtonPanel) btnPanel).generateButtons());
 	}
 }
