@@ -25,7 +25,7 @@ public class Drone extends Model {
 		return speed;
 	}
 
-	
+
 	public Number getProgress() {
 		return progress;
 	}

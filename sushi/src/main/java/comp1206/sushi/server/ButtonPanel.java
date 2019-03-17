@@ -68,7 +68,17 @@ public class ButtonPanel extends JPanel
         for (JButton btn : buttons)
         {
             btn.setFont(font);
+            createButtonListener(btn);
             add(btn);
+        }
+    }
+
+    private void createButtonListener(JButton btn)
+    {
+        switch (btn.getText().split(" ")[0])
+        {
+            case "Remove":
+                btn.addActionListener(e -> view.removeRow());
         }
     }
 }
