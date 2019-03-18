@@ -12,19 +12,17 @@ import java.util.List;
 
 public class TableView extends JTabbedPane
 {
-    private HashMap<String, JScrollPane> tabs = new HashMap<>();
-    private ServerInterface server;
-    private HashMap<String, List<? extends Model>> loadedData = new HashMap<>();
+    private static HashMap<String, JScrollPane> tabs = new HashMap<>();
+    private static final ServerInterface SERVER = new MockServer(); // TODO: Replace with actual server when created.
+    private static final TableParser PARSER = new TableParser(SERVER);
+    private static HashMap<String, List<? extends Model>> loadedData = new HashMap<>();
 
-    private Color red = new Color(170, 50, 50);
-    private Font titleFont = new Font("Viner Hand ITC", Font.BOLD, 20);
-    private Font font = new Font("Courier New", Font.PLAIN, 16);
+    private static final Color RED = new Color(170, 50, 50);
+    private static final Font TITLE_FONT = new Font("Viner Hand ITC", Font.BOLD, 20);
+    private static final Font FONT = new Font("Courier New", Font.PLAIN, 16);
 
     public TableView(String[] tabs)
     {
-        // TODO: Replace with actual server when created.
-        server = new MockServer();
-
         for (String tab : tabs)
         {
             JScrollPane table = generateTable(tab);
@@ -32,7 +30,7 @@ public class TableView extends JTabbedPane
             this.addTab(tab, this.tabs.get(tab));
 
             this.setOpaque(false);
-            this.setFont(titleFont.deriveFont((float)16).deriveFont(Font.PLAIN));
+            this.setFont(TITLE_FONT.deriveFont((float)16).deriveFont(Font.PLAIN));
         }
     }
 
@@ -41,18 +39,18 @@ public class TableView extends JTabbedPane
         DefaultTableModel model = new DefaultTableModel();
         JTable table = new JTable(model);
 
-        table.setFont(font);
+        table.setFont(FONT);
         table.setRowHeight(16);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setOpaque(false);
-        tableHeader.setBackground(red);
+        tableHeader.setBackground(RED);
         tableHeader.setForeground(Color.WHITE);
-        tableHeader.setFont(titleFont);
+        tableHeader.setFont(TITLE_FONT);
 
-        loadData(tab, model);
+        PARSER.loadData(tab, model);
 
         formatTable(table);
 
@@ -65,60 +63,6 @@ public class TableView extends JTabbedPane
         pane.getViewport().setBackground(Color.WHITE);
 
         return pane;
-    }
-
-    private void loadData(String type, DefaultTableModel model)
-    {
-        List<? extends Model> data = new ArrayList<>();
-
-        switch (type)
-        {
-            case "Orders":
-                data = server.getOrders();
-                break;
-
-            case "Dishes":
-                data = server.getDishes();
-                break;
-
-            case "Ingredients":
-                data = server.getIngredients();
-                break;
-
-            case "Suppliers":
-                data = server.getSuppliers();
-                break;
-
-            case "Staff":
-                data = server.getStaff();
-                break;
-
-            case "Users":
-                data = server.getUsers();
-                break;
-
-            case "Drones":
-                data = server.getDrones();
-                break;
-
-            case "Postcodes":
-                data = server.getPostcodes();
-                break;
-
-            case "Configuration":
-                // TODO: Implement Configuration case.
-                break;
-        }
-
-        if (data.size() <= 0)
-        {
-            return;
-        }
-
-        TableData tableData = new TableData();
-        tableData.loadData(data, model);
-
-        loadedData.put(type, data);
     }
 
     private void formatTable(JTable table)
@@ -146,44 +90,7 @@ public class TableView extends JTabbedPane
     {
         DefaultTableModel model = getTableModel();
 
-        String tab = this.getTitleAt(this.getSelectedIndex());
-        List<? extends Model> objects = loadedData.get(tab);
-
-        switch (tab)
-        {
-            case "Postcodes":
-                try
-                {
-                    server.removePostcode((Postcode)objects.get(getSelectedTable().getSelectedRow()));
-                }
-                catch (ServerInterface.UnableToDeleteException ex)
-                {
-                    System.err.println(ex);
-                }
-                break;
-
-            case "Drones":
-                try
-                {
-                    server.removeDrone((Drone)objects.get(getSelectedTable().getSelectedRow()));
-                }
-                catch (ServerInterface.UnableToDeleteException ex)
-                {
-                    System.err.println(ex);
-                }
-                break;
-
-            case "Staff":
-                try
-                {
-                    server.removeStaff((Staff)objects.get(getSelectedTable().getSelectedRow()));
-                }
-                catch (ServerInterface.UnableToDeleteException ex)
-                {
-                    System.err.println(ex);
-                }
-                break;
-        }
+        PARSER.removeRow(this.getTitleAt(this.getSelectedIndex()), getSelectedTable());
 
         model.removeRow(getSelectedTable().getSelectedRow());
     }

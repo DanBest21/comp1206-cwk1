@@ -1,5 +1,7 @@
 package comp1206.sushi.server;
 
+import com.sun.security.ntlm.Server;
+import comp1206.sushi.common.Dish;
 import comp1206.sushi.common.Ingredient;
 import comp1206.sushi.common.Model;
 
@@ -9,9 +11,19 @@ import java.util.*;
 
 public class TableData
 {
+    private static ServerInterface server;
+
+    public TableData(ServerInterface server)
+    {
+        this.server = server;
+    }
+
     public void loadData(List<? extends Model> data, DefaultTableModel model)
     {
         List<String> columns = generateColumns(data);
+
+        if (data.get(0).getClass() == Dish.class || data.get(0).getClass() == Ingredient.class)
+            columns.add("Stock");
 
         Collections.sort(columns, (col1, col2) ->
         {
@@ -88,6 +100,15 @@ public class TableData
 
             for (int j = 0; j < columns.size(); j++)
             {
+                if (columns.get(j).equals("Stock"))
+                {
+                    if (data.get(i).getClass() == Dish.class)
+                        fields[j] = getStock((Dish)data.get(i));
+                    else
+                        fields[j] = getStock((Ingredient)data.get(i));
+                    break;
+                }
+
                 for (Method method : data.get(i).getClass().getMethods())
                 {
                     if (method.getName().contains(columns.get(j).replaceAll("\\s+|/", "")) && method.getName().contains("get"))
@@ -98,8 +119,12 @@ public class TableData
 
                             if (columns.get(j).equals("Recipe") || columns.get(j).equals("Lat/Long"))
                             {
-                                String formattedOutput = handleMapObject(columns.get(j), (Map) output);
+                                String formattedOutput = handleMapObject(columns.get(j), (Map)output);
                                 fields[j] = formattedOutput;
+                            }
+                            else if (columns.get(j).equals("Price"))
+                            {
+                                fields[j] = String.format("£%.2f", Double.parseDouble(output.toString()));
                             }
                             else
                             {
@@ -159,5 +184,15 @@ public class TableData
         formattedOutput = formattedOutput + "</html>";
 
         return formattedOutput;
+    }
+
+    public String getStock(Dish dish)
+    {
+        return server.getDishStockLevels().get(dish).toString();
+    }
+
+    public String getStock(Ingredient ingredient)
+    {
+        return server.getIngredientStockLevels().get(ingredient).toString();
     }
 }
