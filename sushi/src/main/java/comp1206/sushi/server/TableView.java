@@ -1,6 +1,5 @@
 package comp1206.sushi.server;
 
-import comp1206.sushi.common.*;
 import comp1206.sushi.mock.MockServer;
 
 import javax.swing.*;
@@ -8,14 +7,12 @@ import javax.swing.table.*;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 
 public class TableView extends JTabbedPane
 {
     private static HashMap<String, JScrollPane> tabs = new HashMap<>();
     private static final ServerInterface SERVER = new MockServer(); // TODO: Replace with actual server when created.
     private static final TableParser PARSER = new TableParser(SERVER);
-    private static HashMap<String, List<? extends Model>> loadedData = new HashMap<>();
 
     private static final Color RED = new Color(170, 50, 50);
     private static final Font TITLE_FONT = new Font("Viner Hand ITC", Font.BOLD, 20);

@@ -32,32 +32,30 @@ public class ButtonPanel extends JPanel
         JButton[] buttons;
 
         String tab = view.getTitleAt(view.getSelectedIndex());
+        String name = (tab == "Dishes") ? "Dish" : (tab.charAt(tab.length() - 1) == 's') ? tab.substring(0, tab.length() - 1) : tab;
 
         switch (tab)
         {
             case "Postcodes":
             case "Drones":
             case "Staff":
-                buttons = new JButton[2];
-                buttons[0] = new JButton("Add " + ((tab.charAt(tab.length() - 1) == 's') ? tab.substring(0, tab.length() - 1) : tab));
-                buttons[1] = new JButton("Remove " + ((tab.charAt(tab.length() - 1) == 's') ? tab.substring(0, tab.length() - 1) : tab));
-                break;
-
             case "Suppliers":
-            case "Ingredients":
-                buttons = new JButton[1];
-                buttons[0] = new JButton("Add " + tab.substring(0, tab.length() - 1));
+                buttons = new JButton[2];
+                buttons[0] = new JButton("Add " + name);
+                buttons[1] = new JButton("Remove " + name);
                 break;
 
             case "Dishes":
-                buttons = new JButton[2];
-                buttons[0] = new JButton("Add Dish");
-                buttons[1] = new JButton("Edit Dish");
+            case "Ingredients":
+                buttons = new JButton[3];
+                buttons[0] = new JButton("Add " + name);
+                buttons[1] = new JButton("Edit " + name);
+                buttons[2] = new JButton("Remove " + name);
                 break;
 
             case "Orders":
             case "Users":
-            case "Configuration":
+            case "Map":
                 buttons = new JButton[0];
                 break;
 

@@ -21,7 +21,7 @@ public class ServerWindow extends JFrame implements UpdateListener {
 
 	private ImageIcon img = new ImageIcon("icon.png");
 
-	private static final String[] TABS = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Configuration"};
+	private static final String[] TABS = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Map"};
 	
 	/**
 	 * Create a new server window
@@ -83,7 +83,6 @@ public class ServerWindow extends JFrame implements UpdateListener {
 		TableView view = new TableView(TABS);
 		panel.add(view, BorderLayout.CENTER);
 
-		// TODO: Refactor into GridBagLayout or BoxLayout.
 		JPanel btnPanel = new ButtonPanel(view);
 		panel.add(btnPanel, BorderLayout.SOUTH);
 

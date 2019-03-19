@@ -49,6 +49,8 @@ public class MockServer implements ServerInterface {
 		Dish dish3 = addDish("Dish 3","Dish 3",3,1,10);
 		
 		orders.add(new Order());
+		orders.get(0).setStatus(getOrderStatus(orders.get(0)));
+
 		users.add(new User("kh3dg37", "thebestwizard1337", "1 Citadel Road, Dalaran", postcode5));
 
 		addIngredientToDish(dish1,ingredient1,1);
@@ -58,17 +60,32 @@ public class MockServer implements ServerInterface {
 		addIngredientToDish(dish3,ingredient1,2);
 		addIngredientToDish(dish3,ingredient3,1);
 		
-		addStaff("Staff 1");
-		addStaff("Staff 2");
-		addStaff("Staff 3");
+		Staff staff1 = addStaff("Staff 1");
+		staff1.setStatus(getStaffStatus(staff1));
+
+		Staff staff2 = addStaff("Staff 2");
+		staff2.setStatus(getStaffStatus(staff2));
+
+		Staff staff3 = addStaff("Staff 3");
+		staff3.setStatus(getStaffStatus(staff3));
 		
 		Drone drone1 = addDrone(1);
 		drone1.setStatus(getDroneStatus(drone1));
 		drone1.setDestination(postcode3);
 		drone1.setSource(postcode2);
 		drone1.setProgress(5);
-		addDrone(2);
-		addDrone(3);
+
+		Drone drone2 = addDrone(2);
+		drone2.setStatus(getDroneStatus(drone2));
+		drone2.setDestination(postcode4);
+		drone2.setSource(postcode1);
+		drone2.setProgress(51);
+
+		Drone drone3 = addDrone(3);
+		drone3.setStatus(getDroneStatus(drone3));
+		drone3.setDestination(postcode5);
+		drone3.setSource(postcode3);
+		drone3.setProgress(15);
 
 
 	}

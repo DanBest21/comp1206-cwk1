@@ -56,8 +56,8 @@ public class TableParser
                 data = server.getPostcodes();
                 break;
 
-            case "Configuration":
-                // TODO: Implement Configuration case.
+            case "Map":
+                // TODO: Implement Map case.
                 break;
         }
 
@@ -72,6 +72,7 @@ public class TableParser
         loadedData.put(type, data);
     }
 
+    // TODO: Add validation for special cases.
     public boolean removeRow(String tab, JTable table)
     {
         List<? extends Model> objects = loadedData.get(tab);
