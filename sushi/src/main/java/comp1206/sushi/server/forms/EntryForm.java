@@ -18,4 +18,6 @@ public class EntryForm extends JFrame
 
         setVisible(true);
     }
+
+    // TODO: Figure out how to implement this class in a smart manner - look into getting the constructor of the passed object back to generate the fields and feed the information back in.
 }

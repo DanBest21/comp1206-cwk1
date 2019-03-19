@@ -83,7 +83,9 @@ public class ButtonPanel extends JPanel
         {
             case "Remove":
                 btn.addActionListener(e -> view.removeRow());
+            // TODO: Figure out the best way of distinguishing between an add or edit EntryForm.
             case "Add":
+            case "Edit":
                 btn.addActionListener(e -> new EntryForm(server, btn.getText()));
         }
     }

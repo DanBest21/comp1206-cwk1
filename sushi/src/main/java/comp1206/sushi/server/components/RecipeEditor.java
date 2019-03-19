@@ -4,4 +4,5 @@ import javax.swing.*;
 
 public class RecipeEditor extends JPanel
 {
+    // TODO: Implement the RecipeEditor.
 }
