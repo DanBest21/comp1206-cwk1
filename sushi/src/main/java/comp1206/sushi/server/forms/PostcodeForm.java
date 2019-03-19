@@ -10,8 +10,11 @@ public class PostcodeForm extends EntryForm
     }
 
     @Override
-    public void generateForm() {
-
+    public void generateForm()
+    {
+        createTextField("Postcode");
+        createSubmitButton();
+        resizeWindow();
     }
 }
 

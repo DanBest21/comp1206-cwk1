@@ -1,6 +1,7 @@
 package comp1206.sushi.server.table;
 
 import comp1206.sushi.server.ServerInterface;
+import comp1206.sushi.server.configuration.ServerConfiguration;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -13,10 +14,6 @@ public class TableView extends JTabbedPane
     private static HashMap<String, JScrollPane> tabs = new HashMap<>();
     private static TableParser parser;
 
-    private static final Color RED = new Color(170, 50, 50);
-    private static final Font TITLE_FONT = new Font("Viner Hand ITC", Font.BOLD, 20);
-    private static final Font FONT = new Font("Courier New", Font.PLAIN, 16);
-
     public TableView(String[] tabs, ServerInterface server)
     {
         parser = new TableParser(server);
@@ -28,7 +25,7 @@ public class TableView extends JTabbedPane
             this.addTab(tab, this.tabs.get(tab));
 
             this.setOpaque(false);
-            this.setFont(TITLE_FONT.deriveFont((float)16).deriveFont(Font.PLAIN));
+            this.setFont(ServerConfiguration.getSmallTitleFont());
         }
     }
 
@@ -37,16 +34,16 @@ public class TableView extends JTabbedPane
         DefaultTableModel model = new DefaultTableModel();
         JTable table = new JTable(model);
 
-        table.setFont(FONT);
+        table.setFont(ServerConfiguration.getFont());
         table.setRowHeight(16);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setOpaque(false);
-        tableHeader.setBackground(RED);
+        tableHeader.setBackground(ServerConfiguration.getColour());
         tableHeader.setForeground(Color.WHITE);
-        tableHeader.setFont(TITLE_FONT);
+        tableHeader.setFont(ServerConfiguration.getTitleFont());
 
         parser.loadData(tab, model);
 

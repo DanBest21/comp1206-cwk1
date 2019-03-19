@@ -20,9 +20,11 @@ public class TableData
     {
         List<String> columns = generateColumns(data);
 
-        if (data.get(0).getClass() == Dish.class || data.get(0).getClass() == Ingredient.class)
+        Class type = data.get(0).getClass();
+
+        if (type == Dish.class || type == Ingredient.class)
             columns.add("Stock");
-        if (data.get(0).getClass() == Order.class)
+        if (type == Order.class)
             columns.add("Cost");
 
         columns.sort((col1, col2) ->
@@ -38,6 +40,11 @@ public class TableData
 
         for (String column : columns)
         {
+            if (column.equals("Name"))
+            {
+                column = (type == Postcode.class || type == Order.class) ? type.getSimpleName() : type.getSimpleName() + " Name";
+            }
+
             model.addColumn(column);
         }
 

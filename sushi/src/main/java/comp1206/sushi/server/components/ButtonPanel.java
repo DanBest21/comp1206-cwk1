@@ -1,15 +1,16 @@
 package comp1206.sushi.server.components;
 
-import comp1206.sushi.server.forms.EntryForm;
+import comp1206.sushi.server.configuration.ServerConfiguration;
+import comp1206.sushi.server.forms.*;
 import comp1206.sushi.server.ServerInterface;
 import comp1206.sushi.server.table.TableView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class ButtonPanel extends JPanel
 {
-    private Font font = new Font("Viner Hand ITC", Font.BOLD, 20);
     private TableView view;
     private ServerInterface server;
 
@@ -71,7 +72,7 @@ public class ButtonPanel extends JPanel
 
         for (JButton btn : buttons)
         {
-            btn.setFont(font);
+            btn.setFont(ServerConfiguration.getTitleFont());
             createButtonListener(btn);
             add(btn);
         }
@@ -83,10 +84,40 @@ public class ButtonPanel extends JPanel
         {
             case "Remove":
                 btn.addActionListener(e -> view.removeRow());
-            // TODO: Figure out the best way of distinguishing between an add or edit EntryForm.
             case "Add":
             case "Edit":
-                // btn.addActionListener(e -> new EntryForm(server, btn.getText()));
+                try
+                {
+                    btn.addActionListener(getActionListener(btn.getText()));
+                }
+                catch (IllegalStateException ex)
+                {
+                    ex.printStackTrace();
+                }
+        }
+    }
+
+    private ActionListener getActionListener(String btnName) throws IllegalStateException
+    {
+        String operation = btnName.split(" ")[0];
+        String className = btnName.split(" ")[1];
+
+        switch (className)
+        {
+            case "Dish":
+                return (e -> new DishForm(server, btnName));
+            case "Drone":
+                return (e -> new DroneForm(server, btnName));
+            case "Ingredient":
+                return (e -> new IngredientForm(server, btnName));
+            case "Postcode":
+                return (e -> new PostcodeForm(server, btnName));
+            case "Staff":
+                return (e -> new StaffForm(server, btnName));
+            case "Supplier":
+                return (e -> new SupplierForm(server, btnName));
+            default:
+                throw new IllegalStateException("Element \"" + btnName + "\" is not recognised.");
         }
     }
 }

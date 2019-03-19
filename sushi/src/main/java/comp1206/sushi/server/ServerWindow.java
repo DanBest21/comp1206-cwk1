@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import comp1206.sushi.common.*;
 import comp1206.sushi.server.components.ButtonPanel;
+import comp1206.sushi.server.configuration.ServerConfiguration;
 import comp1206.sushi.server.table.TableView;
 
 /**
@@ -19,10 +20,6 @@ public class ServerWindow extends JFrame implements UpdateListener {
 
 	private static final long serialVersionUID = -4661566573959270000L;
 	private ServerInterface server;
-
-	private static final ImageIcon IMG = new ImageIcon("icon.png");
-
-	private static final String[] TABS = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Map"};
 	
 	/**
 	 * Create a new server window
@@ -74,24 +71,19 @@ public class ServerWindow extends JFrame implements UpdateListener {
 
 	public void setupWindow()
 	{
-		setIconImage(IMG.getImage());
+		setIconImage(ServerConfiguration.getImg());
 
 		JPanel panel = new JPanel();
 		setContentPane(panel);
 		panel.setLayout(new BorderLayout());
 		panel.setBackground(Color.WHITE);
 
-		TableView view = new TableView(TABS, server);
+		TableView view = new TableView(ServerConfiguration.getTabs(), server);
 		panel.add(view, BorderLayout.CENTER);
 
 		JPanel btnPanel = new ButtonPanel(view, server);
 		panel.add(btnPanel, BorderLayout.SOUTH);
 
 		view.addChangeListener(e -> ((ButtonPanel) btnPanel).generateButtons());
-	}
-
-	public static Image getImg()
-	{
-		return IMG.getImage();
 	}
 }
