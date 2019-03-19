@@ -1,4 +1,8 @@
-package comp1206.sushi.server;
+package comp1206.sushi.server.components;
+
+import comp1206.sushi.server.forms.EntryForm;
+import comp1206.sushi.server.ServerInterface;
+import comp1206.sushi.server.table.TableView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,10 +11,12 @@ public class ButtonPanel extends JPanel
 {
     private Font font = new Font("Viner Hand ITC", Font.BOLD, 20);
     private TableView view;
+    private ServerInterface server;
 
-    public ButtonPanel(TableView view)
+    public ButtonPanel(TableView view, ServerInterface server)
     {
         this.view = view;
+        this.server = server;
 
         setLayout(new GridLayout());
         setBackground(Color.WHITE);
@@ -77,6 +83,8 @@ public class ButtonPanel extends JPanel
         {
             case "Remove":
                 btn.addActionListener(e -> view.removeRow());
+            case "Add":
+                btn.addActionListener(e -> new EntryForm(server, btn.getText()));
         }
     }
 }

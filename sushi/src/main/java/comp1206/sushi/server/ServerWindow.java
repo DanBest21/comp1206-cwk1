@@ -8,7 +8,8 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
 import comp1206.sushi.common.*;
-import comp1206.sushi.server.ServerInterface.UnableToDeleteException;
+import comp1206.sushi.server.components.ButtonPanel;
+import comp1206.sushi.server.table.TableView;
 
 /**
  * Provides the Sushi Server user interface
@@ -19,7 +20,7 @@ public class ServerWindow extends JFrame implements UpdateListener {
 	private static final long serialVersionUID = -4661566573959270000L;
 	private ServerInterface server;
 
-	private ImageIcon img = new ImageIcon("icon.png");
+	private static final ImageIcon IMG = new ImageIcon("icon.png");
 
 	private static final String[] TABS = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Map"};
 	
@@ -73,19 +74,24 @@ public class ServerWindow extends JFrame implements UpdateListener {
 
 	public void setupWindow()
 	{
-		this.setIconImage(img.getImage());
+		setIconImage(IMG.getImage());
 
 		JPanel panel = new JPanel();
-		this.setContentPane(panel);
+		setContentPane(panel);
 		panel.setLayout(new BorderLayout());
 		panel.setBackground(Color.WHITE);
 
-		TableView view = new TableView(TABS);
+		TableView view = new TableView(TABS, server);
 		panel.add(view, BorderLayout.CENTER);
 
-		JPanel btnPanel = new ButtonPanel(view);
+		JPanel btnPanel = new ButtonPanel(view, server);
 		panel.add(btnPanel, BorderLayout.SOUTH);
 
 		view.addChangeListener(e -> ((ButtonPanel) btnPanel).generateButtons());
+	}
+
+	public static Image getImg()
+	{
+		return IMG.getImage();
 	}
 }

@@ -1,6 +1,7 @@
-package comp1206.sushi.server;
+package comp1206.sushi.server.table;
 
 import comp1206.sushi.common.*;
+import comp1206.sushi.server.ServerInterface;
 
 import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.Method;

@@ -1,6 +1,6 @@
-package comp1206.sushi.server;
+package comp1206.sushi.server.table;
 
-import comp1206.sushi.mock.MockServer;
+import comp1206.sushi.server.ServerInterface;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -11,15 +11,16 @@ import java.util.*;
 public class TableView extends JTabbedPane
 {
     private static HashMap<String, JScrollPane> tabs = new HashMap<>();
-    private static final ServerInterface SERVER = new MockServer(); // TODO: Replace with actual server when created.
-    private static final TableParser PARSER = new TableParser(SERVER);
+    private static TableParser parser;
 
     private static final Color RED = new Color(170, 50, 50);
     private static final Font TITLE_FONT = new Font("Viner Hand ITC", Font.BOLD, 20);
     private static final Font FONT = new Font("Courier New", Font.PLAIN, 16);
 
-    public TableView(String[] tabs)
+    public TableView(String[] tabs, ServerInterface server)
     {
+        parser = new TableParser(server);
+
         for (String tab : tabs)
         {
             JScrollPane table = generateTable(tab);
@@ -47,7 +48,7 @@ public class TableView extends JTabbedPane
         tableHeader.setForeground(Color.WHITE);
         tableHeader.setFont(TITLE_FONT);
 
-        PARSER.loadData(tab, model);
+        parser.loadData(tab, model);
 
         formatTable(table);
 
@@ -86,10 +87,13 @@ public class TableView extends JTabbedPane
     public void removeRow()
     {
         DefaultTableModel model = getTableModel();
+        JTable table = getSelectedTable();
 
-        PARSER.removeRow(this.getTitleAt(this.getSelectedIndex()), getSelectedTable());
+        if (table.getSelectedRow() == -1)
+            return;
 
-        model.removeRow(getSelectedTable().getSelectedRow());
+        if (parser.removeRow(this.getTitleAt(this.getSelectedIndex()), table))
+            model.removeRow(table.getSelectedRow());
     }
 
     public DefaultTableModel getTableModel()
