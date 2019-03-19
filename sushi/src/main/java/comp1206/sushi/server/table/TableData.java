@@ -13,7 +13,7 @@ public class TableData
 
     public TableData(ServerInterface server)
     {
-        this.server = server;
+        TableData.server = server;
     }
 
     public void loadData(List<? extends Model> data, DefaultTableModel model)
@@ -25,7 +25,7 @@ public class TableData
         if (data.get(0).getClass() == Order.class)
             columns.add("Cost");
 
-        Collections.sort(columns, (col1, col2) ->
+        columns.sort((col1, col2) ->
         {
             if (col1.equals(col2))
                 return 0;
@@ -42,12 +42,9 @@ public class TableData
         }
 
         List<String[]> rows = populateRows(columns, data);
-        Iterator iterator = rows.iterator();
 
-        while (iterator.hasNext())
-        {
-            String[] row = (String[]) iterator.next();
-            model.addRow(row);
+        for (Object row : rows) {
+            model.addRow((String[])row);
         }
     }
 
@@ -154,7 +151,7 @@ public class TableData
                 }
                 catch (ReflectiveOperationException ex)
                 {
-                    System.err.println(ex);
+                    ex.printStackTrace();
                 }
             }
         }
@@ -162,17 +159,14 @@ public class TableData
         return field;
     }
 
-    private String handleMapObject(String field, Map map)
+    private <S, T> String handleMapObject(String field, Map<S, T> map)
     {
         String formattedOutput = "<html>";
-        Iterator iterator;
+        Iterator iterator = map.entrySet().iterator();
 
         switch (field)
         {
             case "Recipe":
-                Map<Ingredient, Number> recipe = map;
-                iterator = recipe.entrySet().iterator();
-
                 while (iterator.hasNext())
                 {
                     Map.Entry entry = (Map.Entry)iterator.next();
@@ -183,9 +177,6 @@ public class TableData
                 break;
 
             case "Lat/Long":
-                Map<String, Double> latlong = map;
-                iterator = latlong.entrySet().iterator();
-
                 while (iterator.hasNext())
                 {
                     Map.Entry entry = (Map.Entry)iterator.next();
