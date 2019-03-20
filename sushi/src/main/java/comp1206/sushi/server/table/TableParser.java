@@ -21,6 +21,22 @@ public class TableParser
 
     public void loadData(String type, DefaultTableModel model)
     {
+        List<? extends Model> data = getData(type);
+
+        if (data.size() <= 0)
+        {
+            // TODO: Create an exception here.
+            return;
+        }
+
+        TableData tableData = new TableData(server);
+        tableData.loadData(data, model);
+
+        loadedData.put(type, data);
+    }
+
+    public List<? extends Model> getData(String type)
+    {
         List<? extends Model> data = new ArrayList<>();
 
         switch (type)
@@ -62,15 +78,7 @@ public class TableParser
                 break;
         }
 
-        if (data.size() <= 0)
-        {
-            return;
-        }
-
-        TableData tableData = new TableData(server);
-        tableData.loadData(data, model);
-
-        loadedData.put(type, data);
+        return data;
     }
 
     // TODO: Add validation for special cases.
@@ -87,7 +95,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    System.err.println(ex);
+                    ex.printStackTrace();
                     return false;
                 }
                 break;
@@ -99,7 +107,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    System.err.println(ex);
+                    ex.printStackTrace();
                     return false;
                 }
                 break;
@@ -111,7 +119,43 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    System.err.println(ex);
+                    ex.printStackTrace();
+                    return false;
+                }
+                break;
+
+            case "Suppliers":
+                try
+                {
+                    server.removeSupplier((Supplier)objects.get(table.getSelectedRow()));
+                }
+                catch (ServerInterface.UnableToDeleteException ex)
+                {
+                    ex.printStackTrace();
+                    return false;
+                }
+                break;
+
+            case "Ingredients":
+                try
+                {
+                    server.removeIngredient((Ingredient) objects.get(table.getSelectedRow()));
+                }
+                catch (ServerInterface.UnableToDeleteException ex)
+                {
+                    ex.printStackTrace();
+                    return false;
+                }
+                break;
+
+            case "Dishes":
+                try
+                {
+                    server.removeDish((Dish) objects.get(table.getSelectedRow()));
+                }
+                catch (ServerInterface.UnableToDeleteException ex)
+                {
+                    ex.printStackTrace();
                     return false;
                 }
                 break;

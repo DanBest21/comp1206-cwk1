@@ -73,6 +73,7 @@ public class ButtonPanel extends JPanel
         for (JButton btn : buttons)
         {
             btn.setFont(ServerConfiguration.getTitleFont());
+            btn.setBackground(Color.WHITE);
             createButtonListener(btn);
             add(btn);
         }
@@ -84,6 +85,7 @@ public class ButtonPanel extends JPanel
         {
             case "Remove":
                 btn.addActionListener(e -> view.removeRow());
+                break;
             case "Add":
             case "Edit":
                 try
@@ -94,6 +96,7 @@ public class ButtonPanel extends JPanel
                 {
                     ex.printStackTrace();
                 }
+                break;
         }
     }
 
@@ -105,17 +108,17 @@ public class ButtonPanel extends JPanel
         switch (className)
         {
             case "Dish":
-                return (e -> new DishForm(server, btnName));
+                return (e -> new DishForm(server, view, btnName));
             case "Drone":
-                return (e -> new DroneForm(server, btnName));
+                return (e -> new DroneForm(server, view, btnName));
             case "Ingredient":
-                return (e -> new IngredientForm(server, btnName));
+                return (e -> new IngredientForm(server, view, btnName));
             case "Postcode":
-                return (e -> new PostcodeForm(server, btnName));
+                return (e -> new PostcodeForm(server, view, btnName));
             case "Staff":
-                return (e -> new StaffForm(server, btnName));
+                return (e -> new StaffForm(server, view, btnName));
             case "Supplier":
-                return (e -> new SupplierForm(server, btnName));
+                return (e -> new SupplierForm(server, view, btnName));
             default:
                 throw new IllegalStateException("Element \"" + btnName + "\" is not recognised.");
         }

@@ -17,12 +17,13 @@ public class TableView extends JTabbedPane
     public TableView(String[] tabs, ServerInterface server)
     {
         parser = new TableParser(server);
+        setBackground(Color.WHITE);
 
         for (String tab : tabs)
         {
             JScrollPane table = generateTable(tab);
-            this.tabs.put(tab, table);
-            this.addTab(tab, this.tabs.get(tab));
+            TableView.tabs.put(tab, table);
+            this.addTab(tab, TableView.tabs.get(tab));
 
             this.setOpaque(false);
             this.setFont(ServerConfiguration.getSmallTitleFont());
@@ -93,14 +94,28 @@ public class TableView extends JTabbedPane
             model.removeRow(table.getSelectedRow());
     }
 
-    public DefaultTableModel getTableModel()
+    private DefaultTableModel getTableModel()
     {
         return (DefaultTableModel)getSelectedTable().getModel();
     }
 
-    public JTable getSelectedTable()
+    private JTable getSelectedTable()
     {
         JScrollPane pane = (JScrollPane)this.getSelectedComponent();
         return (JTable)pane.getViewport().getView();
+    }
+
+    public TableParser getParser()
+    {
+        return parser;
+    }
+
+    public void updateTable(String tab)
+    {
+        tabs.put(tab, generateTable(tab));
+
+        int index = this.indexOfTab(tab);
+
+        this.setComponentAt(index, tabs.get(tab));
     }
 }

@@ -1,25 +1,29 @@
 package comp1206.sushi.server.forms;
 
-import comp1206.sushi.common.Model;
+import comp1206.sushi.common.*;
 import comp1206.sushi.server.ServerInterface;
 import comp1206.sushi.server.configuration.ServerConfiguration;
+import comp1206.sushi.server.table.TableView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public abstract class EntryForm extends JFrame
 {
     private ServerInterface server;
+    private TableView view;
     private String formName;
-    private JPanel contentPanel = new JPanel();
+    private JPanel contentPane = new JPanel(new GridLayout(0, 1));
     private int noComponents = 0;
-    private static final int COMPONENT_HEIGHT = 70;
+    private static final int COMPONENT_HEIGHT = 60;
 
-    public EntryForm(ServerInterface server, String formName)
+    public EntryForm(ServerInterface server, TableView view, String formName)
     {
         super("Sushi Server");
-        this.setTitle(server.getRestaurantName() + " Server - " + formName);
+        this.setTitle(formName);
         this.server = server;
+        this.view = view;
         this.formName = formName;
 
         setLocationRelativeTo(null);
@@ -27,8 +31,8 @@ public abstract class EntryForm extends JFrame
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setIconImage(ServerConfiguration.getImg());
 
-        setContentPane(contentPanel);
-        contentPanel.setBackground(ServerConfiguration.getColour());
+        setContentPane(contentPane);
+        contentPane.setBackground(ServerConfiguration.getColour());
 
         generateForm();
 
@@ -37,73 +41,84 @@ public abstract class EntryForm extends JFrame
 
     public abstract void generateForm();
 
-    protected JPanel createTextField(String name)
+    protected JTextField createTextField(String name)
     {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+        JPanel panel = initialisePanel(name);
 
-        JLabel label = formatLabel(new JLabel(name + ":"));
-        panel.add(label);
-
-        JTextField textField = new JTextField(25);
+        JTextField textField = new JTextField(22);
         textField.setFont(ServerConfiguration.getFont());
         textField.setHorizontalAlignment(SwingConstants.RIGHT);
         panel.add(textField);
 
-        panel.setBackground(ServerConfiguration.getColour());
+        addToContentPane(panel);
 
-        contentPanel.add(panel);
-        noComponents++;
-
-        return panel;
+        return textField;
     }
 
-    protected JPanel createSpinner(String name)
+    protected JSpinner createSpinner(String name, int initialValue, int minValue, int maxValue, int interval)
     {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+        JPanel panel = initialisePanel(name);
 
-        panel.add(new JLabel(name + ":"));
-        panel.add(new JSpinner());
+        SpinnerModel model = new SpinnerNumberModel(initialValue, minValue, maxValue, interval);
+        JSpinner spinner = new JSpinner(model);
+        spinner.setFont(ServerConfiguration.getFont());
+        panel.add(spinner);
 
-        contentPanel.add(panel);
-        noComponents++;
+        addToContentPane(panel);
 
-        return panel;
+        return spinner;
     }
 
-    protected JPanel createComboBox(String name, Class<? extends Model> type)
+    protected JComboBox createComboBox(String name, String type)
     {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+        JPanel panel = initialisePanel(name);
 
-        panel.add(new JLabel(name + ":"));
-        panel.add(new JComboBox<>());
+        JComboBox comboBox = new JComboBox();
+        List<? extends Model> items = view.getParser().getData(type);
 
-        contentPanel.add(panel);
-        noComponents++;
+        Class itemClass = items.get(0).getClass();
 
-        return panel;
-    }
+        for (Model item : items)
+        {
+            comboBox.addItem(itemClass.cast(item));
+        }
 
-    protected JPanel createRecipeComponent()
-    {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
+        comboBox.setRenderer(new DefaultListCellRenderer()
+        {
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+            {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-        // TODO: Implement this.
+                if (value instanceof Model)
+                {
+                    Model model = (Model)value;
+                    setText(model.getName());
+                }
 
-        return panel;
+                return this;
+            }
+        });
+
+        comboBox.setFont(ServerConfiguration.getFont());
+        panel.add(comboBox);
+
+        addToContentPane(panel);
+
+        return comboBox;
     }
 
     protected JButton createSubmitButton()
     {
+        JPanel panel = initialisePanel();
+
         JButton btn = new JButton("Submit " + formName.split(" ")[1]);
         btn.setFont(ServerConfiguration.getSmallTitleFont());
+        panel.add(btn);
 
-        contentPanel.add(btn);
+        panel.setBackground(ServerConfiguration.getColour());
 
-        noComponents++;
+        addToContentPane(panel);
 
         return btn;
     }
@@ -113,11 +128,47 @@ public abstract class EntryForm extends JFrame
         setSize(400, noComponents * COMPONENT_HEIGHT);
     }
 
-    private JLabel formatLabel(JLabel label)
+    protected ServerInterface getServer()
     {
+        return server;
+    }
+
+    protected TableView getTableView()
+    {
+        return view;
+    }
+
+    private JLabel createLabel(String text)
+    {
+        JLabel label = new JLabel(text + ": ");
+
         label.setFont(ServerConfiguration.getSmallTitleFont());
         label.setForeground(Color.WHITE);
 
         return label;
+    }
+
+    private void addToContentPane(JPanel panel)
+    {
+        panel.setBackground(ServerConfiguration.getColour());
+
+        contentPane.add(panel);
+        noComponents++;
+    }
+
+    private JPanel initialisePanel()
+    {
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+
+        return panel;
+    }
+
+    private JPanel initialisePanel(String name)
+    {
+        JPanel panel = initialisePanel();
+        panel.add(createLabel(name));
+
+        return panel;
     }
 }
