@@ -33,10 +33,6 @@ public abstract class EntryForm extends JFrame
 
         setContentPane(contentPane);
         contentPane.setBackground(ServerConfiguration.getColour());
-
-        generateForm();
-
-        setVisible(true);
     }
 
     public abstract void generateForm();

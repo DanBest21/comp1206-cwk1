@@ -63,6 +63,7 @@ public class ButtonPanel extends JPanel
             case "Orders":
             case "Users":
             case "Map":
+            case "Configuration":
                 buttons = new JButton[0];
                 break;
 
@@ -87,22 +88,29 @@ public class ButtonPanel extends JPanel
                 btn.addActionListener(e -> view.removeRow());
                 break;
             case "Add":
-            case "Edit":
                 try
                 {
-                    btn.addActionListener(getActionListener(btn.getText()));
+                    btn.addActionListener(getAddActionListener(btn.getText()));
                 }
                 catch (IllegalStateException ex)
                 {
                     ex.printStackTrace();
                 }
                 break;
+            case "Edit":
+                try
+                {
+                    btn.addActionListener(getEditActionListener(btn.getText()));
+                }
+                catch (IllegalStateException ex)
+                {
+                    ex.printStackTrace();
+                }
         }
     }
 
-    private ActionListener getActionListener(String btnName) throws IllegalStateException
+    private ActionListener getAddActionListener(String btnName) throws IllegalStateException
     {
-        String operation = btnName.split(" ")[0];
         String className = btnName.split(" ")[1];
 
         switch (className)
@@ -119,6 +127,31 @@ public class ButtonPanel extends JPanel
                 return (e -> new StaffForm(server, view, btnName));
             case "Supplier":
                 return (e -> new SupplierForm(server, view, btnName));
+            default:
+                throw new IllegalStateException("Element \"" + btnName + "\" is not recognised.");
+        }
+    }
+
+    private ActionListener getEditActionListener(String btnName) throws IllegalStateException
+    {
+        String className = btnName.split(" ")[1];
+
+        switch (className)
+        {
+            case "Dish":
+                return (e -> {
+                    if (view.getSelectedTable().getSelectedRow() != -1)
+                    {
+                        new DishForm(server, view, btnName, view.getParser().getModel("Dishes", view.getSelectedTable()));
+                    }
+                });
+            case "Ingredient":
+                return (e -> {
+                    if (view.getSelectedTable().getSelectedRow() != -1)
+                    {
+                        new IngredientForm(server, view, btnName, view.getParser().getModel("Ingredients", view.getSelectedTable()));
+                    }
+                });
             default:
                 throw new IllegalStateException("Element \"" + btnName + "\" is not recognised.");
         }

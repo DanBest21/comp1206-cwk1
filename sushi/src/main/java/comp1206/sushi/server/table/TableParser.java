@@ -76,6 +76,9 @@ public class TableParser
             case "Map":
                 // TODO: Implement Map case.
                 break;
+
+            case "Configuration":
+                break;
         }
 
         return data;
@@ -84,14 +87,12 @@ public class TableParser
     // TODO: Add validation for special cases.
     public boolean removeRow(String tab, JTable table)
     {
-        List<? extends Model> objects = loadedData.get(tab);
-
         switch (tab)
         {
             case "Postcodes":
                 try
                 {
-                    server.removePostcode((Postcode)objects.get(table.getSelectedRow()));
+                    server.removePostcode(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
@@ -103,7 +104,7 @@ public class TableParser
             case "Drones":
                 try
                 {
-                    server.removeDrone((Drone)objects.get(table.getSelectedRow()));
+                    server.removeDrone(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
@@ -115,7 +116,7 @@ public class TableParser
             case "Staff":
                 try
                 {
-                    server.removeStaff((Staff)objects.get(table.getSelectedRow()));
+                    server.removeStaff(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
@@ -127,7 +128,7 @@ public class TableParser
             case "Suppliers":
                 try
                 {
-                    server.removeSupplier((Supplier)objects.get(table.getSelectedRow()));
+                    server.removeSupplier(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
@@ -139,7 +140,7 @@ public class TableParser
             case "Ingredients":
                 try
                 {
-                    server.removeIngredient((Ingredient) objects.get(table.getSelectedRow()));
+                    server.removeIngredient(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
@@ -151,7 +152,7 @@ public class TableParser
             case "Dishes":
                 try
                 {
-                    server.removeDish((Dish) objects.get(table.getSelectedRow()));
+                    server.removeDish(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
@@ -162,5 +163,11 @@ public class TableParser
         }
 
         return true;
+    }
+
+    public <T extends Model> T getModel(String tab, JTable table)
+    {
+        List<? extends Model> objects = loadedData.get(tab);
+        return (T)objects.get(table.getSelectedRow());
     }
 }

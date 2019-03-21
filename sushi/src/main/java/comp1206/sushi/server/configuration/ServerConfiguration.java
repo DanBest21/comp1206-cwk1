@@ -10,7 +10,7 @@ public final class ServerConfiguration
     private static final Font FONT = new Font("Courier New", Font.PLAIN, 16);
     private static final ImageIcon IMG = new ImageIcon("icon.png");
 
-    private static final String[] TABS = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Map"};
+    private static final String[] TABS = {"Orders", "Dishes", "Ingredients", "Suppliers", "Staff", "Users", "Drones", "Postcodes", "Map", "Configuration"};
 
     public static Color getColour() { return RED; }
 

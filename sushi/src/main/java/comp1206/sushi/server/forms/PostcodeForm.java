@@ -10,6 +10,8 @@ public class PostcodeForm extends EntryForm
     public PostcodeForm(ServerInterface server, TableView view, String formName)
     {
         super(server, view, formName);
+        generateForm();
+        setVisible(true);
     }
 
     @Override

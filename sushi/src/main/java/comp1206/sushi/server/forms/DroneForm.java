@@ -10,6 +10,8 @@ public class DroneForm extends EntryForm
     public DroneForm(ServerInterface server, TableView view, String formName)
     {
         super(server, view, formName);
+        generateForm();
+        setVisible(true);
     }
 
     @Override

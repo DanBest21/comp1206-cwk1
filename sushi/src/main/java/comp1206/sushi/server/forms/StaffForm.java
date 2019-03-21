@@ -10,6 +10,8 @@ public class StaffForm extends EntryForm
     public StaffForm(ServerInterface server, TableView view, String formName)
     {
         super(server, view, formName);
+        generateForm();
+        setVisible(true);
     }
 
     @Override

@@ -99,7 +99,7 @@ public class TableView extends JTabbedPane
         return (DefaultTableModel)getSelectedTable().getModel();
     }
 
-    private JTable getSelectedTable()
+    public JTable getSelectedTable()
     {
         JScrollPane pane = (JScrollPane)this.getSelectedComponent();
         return (JTable)pane.getViewport().getView();
