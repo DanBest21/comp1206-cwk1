@@ -61,7 +61,12 @@ public class TableView extends JTabbedPane
         return pane;
     }
 
-    // TODO: Acknowledge source from StackOverflow.
+    // *******************************************************************************************************
+    // * Title: Modified updateRowHeights() function
+    // * Author: camickr
+    // * Date: 2009
+    // * Availability: https://stackoverflow.com/questions/1783607/auto-adjust-the-height-of-rows-in-a-jtable
+    // ******************************************************************************************************/
     private void formatTable(JTable table)
     {
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
