@@ -79,6 +79,7 @@ public abstract class EntryForm extends JFrame
             comboBox.addItem(itemClass.cast(item));
         }
 
+        // TODO: Acknowledge StackOverflow source.
         comboBox.setRenderer(new DefaultListCellRenderer()
         {
             @Override
