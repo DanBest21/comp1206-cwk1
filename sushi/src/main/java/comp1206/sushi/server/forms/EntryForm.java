@@ -79,7 +79,12 @@ public abstract class EntryForm extends JFrame
             comboBox.addItem(itemClass.cast(item));
         }
 
-        // TODO: Acknowledge StackOverflow source.
+        // *******************************************************************************************************
+        // * Title: Combo Box with Custom Renderer
+        // * Author: Rob Camick
+        // * Date: 2013
+        // * Availability: https://tips4java.wordpress.com/2013/11/17/combo-box-with-custom-renderer/
+        // ******************************************************************************************************/
         comboBox.setRenderer(new DefaultListCellRenderer()
         {
             @Override
