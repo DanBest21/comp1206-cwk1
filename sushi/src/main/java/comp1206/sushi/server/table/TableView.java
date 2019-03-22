@@ -61,6 +61,7 @@ public class TableView extends JTabbedPane
         return pane;
     }
 
+    // TODO: Acknowledge source from StackOverflow.
     private void formatTable(JTable table)
     {
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
