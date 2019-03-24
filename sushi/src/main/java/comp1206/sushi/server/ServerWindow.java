@@ -20,6 +20,7 @@ public class ServerWindow extends JFrame implements UpdateListener {
 
 	private static final long serialVersionUID = -4661566573959270000L;
 	private ServerInterface server;
+	private TableView view;
 	
 	/**
 	 * Create a new server window
@@ -57,8 +58,10 @@ public class ServerWindow extends JFrame implements UpdateListener {
 	/**
 	 * Refresh all parts of the server application based on receiving new data, calling the server afresh
 	 */
-	public void refreshAll() {
-		
+	public void refreshAll()
+	{
+		// TODO: Figure out why this is causing the row to be deselected.
+		// view.updateTables();
 	}
 	
 	@Override
@@ -78,7 +81,7 @@ public class ServerWindow extends JFrame implements UpdateListener {
 		panel.setLayout(new BorderLayout());
 		panel.setBackground(Color.WHITE);
 
-		TableView view = new TableView(ServerConfiguration.getTabs(), server);
+		view = new TableView(ServerConfiguration.getTabs(), server);
 		panel.add(view, BorderLayout.CENTER);
 
 		JPanel btnPanel = new ButtonPanel(view, server);

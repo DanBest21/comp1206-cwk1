@@ -1,5 +1,6 @@
 package comp1206.sushi.server.forms;
 
+import comp1206.sushi.common.Dish;
 import comp1206.sushi.common.Ingredient;
 import comp1206.sushi.common.Supplier;
 import comp1206.sushi.server.ServerInterface;
@@ -51,7 +52,7 @@ public class IngredientForm extends EntryForm
         btnSubmit.addActionListener(e -> submitEntry(textIngredient.getText(), textUnits.getText(),
                 (Supplier)comboBoxSupplier.getSelectedItem(),
                 (Integer)spinnerThreshold.getValue(), (Integer)spinnerAmount.getValue(), (Integer)spinnerStock.getValue()));
-        resizeWindow();
+        resizeWindow(0.7);
     }
 
     private void generateEditForm()
@@ -64,11 +65,14 @@ public class IngredientForm extends EntryForm
         spinnerStock.setValue(getServer().getIngredientStockLevels().get(ingredient));
         JButton btnSubmit = createSubmitButton();
         btnSubmit.addActionListener(e -> editEntry(ingredient, (Integer)spinnerThreshold.getValue(), (Integer)spinnerAmount.getValue(), (Integer)spinnerStock.getValue()));
-        resizeWindow();
+        resizeWindow(0.85);
     }
 
     private void submitEntry(String ingredient, String units, Supplier supplier, Number restockThreshold, Number restockAmount, Number stock)
     {
+        if (!validateInput(ingredient, units, supplier, restockThreshold, restockAmount, stock))
+            return;
+
         Ingredient ingredientObject = getServer().addIngredient(ingredient, units, supplier, restockThreshold, restockAmount);
         getServer().setStock(ingredientObject, stock);
         updateEntry();
@@ -85,5 +89,25 @@ public class IngredientForm extends EntryForm
     {
         getTableView().updateTable("Ingredients");
         this.dispose();
+    }
+
+    private boolean validateInput(String ingredient, String units, Supplier supplier, Number restockThreshold, Number restockAmount, Number stock)
+    {
+        if (ingredient.trim().isEmpty() || units.trim().isEmpty())
+        {
+            throwMissingFieldsInputError();
+            return false;
+        }
+
+        for (Ingredient ingredientObject : getServer().getIngredients())
+        {
+            if (ingredientObject.getName().trim().equals(ingredient.trim()))
+            {
+                throwDuplicateUniqueFieldError("Ingredient Name", ingredient);
+                return false;
+            }
+        }
+
+        return true;
     }
 }

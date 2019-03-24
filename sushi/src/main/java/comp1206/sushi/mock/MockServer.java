@@ -86,8 +86,6 @@ public class MockServer implements ServerInterface {
 		drone3.setDestination(postcode5);
 		drone3.setSource(postcode3);
 		drone3.setProgress(15);
-
-
 	}
 	
 	@Override
@@ -320,9 +318,10 @@ public class MockServer implements ServerInterface {
 
 	@Override
 	public void setRecipe(Dish dish, Map<Ingredient, Number> recipe) {
-		for(Entry<Ingredient, Number> recipeItem : recipe.entrySet()) {
-			addIngredientToDish(dish,recipeItem.getKey(),recipeItem.getValue());
-		}
+		dish.setRecipe(recipe);
+//		for(Entry<Ingredient, Number> recipeItem : recipe.entrySet()) {
+//			addIngredientToDish(dish,recipeItem.getKey(),recipeItem.getValue());
+//		}
 		this.notifyUpdate();
 	}
 

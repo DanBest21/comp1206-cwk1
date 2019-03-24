@@ -124,4 +124,12 @@ public class TableView extends JTabbedPane
 
         this.setComponentAt(index, tabs.get(tab));
     }
+
+    public void updateTables()
+    {
+        for (String tab : tabs.keySet())
+        {
+            updateTable(tab);
+        }
+    }
 }

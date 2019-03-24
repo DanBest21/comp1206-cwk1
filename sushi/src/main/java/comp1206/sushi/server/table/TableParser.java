@@ -24,10 +24,7 @@ public class TableParser
         List<? extends Model> data = getData(type);
 
         if (data.size() <= 0)
-        {
-            // TODO: Create an exception here.
             return;
-        }
 
         TableData tableData = new TableData(server);
         tableData.loadData(data, model);
@@ -92,11 +89,19 @@ public class TableParser
             case "Postcodes":
                 try
                 {
+                    Postcode postcode = getModel(tab, table);
+
+                    for (Supplier supplier : server.getSuppliers())
+                    {
+                        if (supplier.getPostcode().equals(postcode))
+                            throw new ServerInterface.UnableToDeleteException("Unable to delete postcode \"" + postcode.getName() + "\" as the supplier \"" + supplier.getName() + "\" is dependent upon it.");
+                    }
+
                     server.removePostcode(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    ex.printStackTrace();
+                    displayErrorMessage(ex.getMessage());
                     return false;
                 }
                 break;
@@ -108,7 +113,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    ex.printStackTrace();
+                    displayErrorMessage(ex.getMessage());
                     return false;
                 }
                 break;
@@ -120,7 +125,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    ex.printStackTrace();
+                    displayErrorMessage(ex.getMessage());
                     return false;
                 }
                 break;
@@ -132,7 +137,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    ex.printStackTrace();
+                    displayErrorMessage(ex.getMessage());
                     return false;
                 }
                 break;
@@ -140,11 +145,19 @@ public class TableParser
             case "Ingredients":
                 try
                 {
+                    Ingredient ingredient = getModel(tab, table);
+
+                    for (Dish dish : server.getDishes())
+                    {
+                        if (dish.getRecipe().containsKey(ingredient))
+                            throw new ServerInterface.UnableToDeleteException("Unable to delete ingredient \"" + ingredient.getName() + "\", as the dish \"" + dish.getName() + "\" is dependent upon it.");
+                    }
+
                     server.removeIngredient(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    ex.printStackTrace();
+                    displayErrorMessage(ex.getMessage());
                     return false;
                 }
                 break;
@@ -156,7 +169,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    ex.printStackTrace();
+                    displayErrorMessage(ex.getMessage());
                     return false;
                 }
                 break;
@@ -169,5 +182,10 @@ public class TableParser
     {
         List<? extends Model> objects = loadedData.get(tab);
         return (T)objects.get(table.getSelectedRow());
+    }
+
+    private void displayErrorMessage(String message)
+    {
+        JOptionPane.showMessageDialog(new JDialog(), message + "\r\nPlease correct this issue and then try again.", "Remove Error", JOptionPane.ERROR_MESSAGE);
     }
 }

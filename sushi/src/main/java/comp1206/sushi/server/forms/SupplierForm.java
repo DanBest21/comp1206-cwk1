@@ -1,6 +1,7 @@
 package comp1206.sushi.server.forms;
 
 import comp1206.sushi.common.Postcode;
+import comp1206.sushi.common.Supplier;
 import comp1206.sushi.server.ServerInterface;
 import comp1206.sushi.server.table.TableView;
 
@@ -27,8 +28,31 @@ public class SupplierForm extends EntryForm
 
     private void submitEntry(String name, Postcode postcode)
     {
+        if (!validateInput(name, postcode))
+            return;
+
         getServer().addSupplier(name, postcode);
         getTableView().updateTable("Suppliers");
         this.dispose();
+    }
+
+    private boolean validateInput(String name, Postcode postcode)
+    {
+        if (name.trim().isEmpty())
+        {
+            throwMissingFieldsInputError();
+            return false;
+        }
+
+        for (Supplier supplier : getServer().getSuppliers())
+        {
+            if (supplier.getName().trim().equals(name.trim()))
+            {
+                throwDuplicateUniqueFieldError("Supplier Name", name);
+                return false;
+            }
+        }
+
+        return true;
     }
 }

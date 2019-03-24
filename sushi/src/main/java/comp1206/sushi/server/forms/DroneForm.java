@@ -25,6 +25,8 @@ public class DroneForm extends EntryForm
 
     private void submitEntry(Number speed)
     {
+        // Currently no need for validation as the JSpinner does that anyway - may be added later.
+
         getServer().addDrone(speed);
         getTableView().updateTable("Drones");
         this.dispose();
