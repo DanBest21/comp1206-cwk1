@@ -19,6 +19,7 @@ public class RecipeBuilder extends JPanel
     private DishForm form;
     private int noRows = 0;
     private JButton btnAdd;
+    private List<Ingredient> selectedIngredients = new ArrayList<>();
 
     private final static int[] SPINNER_PARAMETERS = new int[]{1, 1, 100, 1};
 
@@ -72,12 +73,8 @@ public class RecipeBuilder extends JPanel
         row[i++] = spinner;
 
         JComboBox comboBox = new JComboBox();
-        List<Ingredient> items = (List<Ingredient>)view.getParser().getData("Ingredients");
 
-        for (Ingredient ingredient : items)
-        {
-            comboBox.addItem(ingredient);
-        }
+        loadComboBoxItems(comboBox);
 
         // *******************************************************************************************************
         // * Title: Combo Box with Custom Renderer
@@ -103,6 +100,21 @@ public class RecipeBuilder extends JPanel
         });
 
         comboBox.setFont(ServerConfiguration.getFont());
+        comboBox.addActionListener(e -> {
+            selectedIngredients.clear();
+
+            for (int j = 0; j < rows.size(); j++)
+            {
+                JComboBox comboBox2 = (JComboBox) rows.get(j)[(j == 0) ? 1 : 2];
+
+                if (!selectedIngredients.contains(comboBox2.getSelectedItem()))
+                {
+                    selectedIngredients.add((Ingredient)comboBox2.getSelectedItem());
+                }
+            }
+
+            updateComboBoxItems(false);
+        });
 
         setGridBagConstraints(comboBox, 2, noRows, 1, GridBagConstraints.EAST);
         add(comboBox);
@@ -111,28 +123,43 @@ public class RecipeBuilder extends JPanel
         row[i++] = comboBox;
         noRows++;
 
-        if (noRows > 1)
+        if (comboBox.getItemCount() == 1)
+        {
+            hideAddButton();
+            form.resizeForm(1);
+        }
+        else if (noRows > 1)
         {
             moveAddButton();
             form.resizeForm(1);
         }
+
+        updateComboBoxItems(true);
     }
 
     private void deleteRow(int index)
     {
+        JComboBox comboBox = (JComboBox) rows.get(index)[(index == 0) ? 1 : 2];
+
         for (Component component : rows.get(index))
         {
             remove(component);
         }
 
+        selectedIngredients.remove(comboBox.getSelectedItem());
+
         rows.remove(index);
         noRows--;
 
         updateButtonListeners();
+        updateComboBoxItems(false);
         repositionRows(index);
 
         form.resizeForm(-1);
         moveAddButton();
+
+        if (!btnAdd.isVisible())
+            showAddButton();
     }
 
     private void updateButtonListeners()
@@ -177,6 +204,16 @@ public class RecipeBuilder extends JPanel
         remove(btnAdd);
         setGridBagConstraints(btnAdd, 0, noRows + 1, 3, GridBagConstraints.CENTER);
         add(btnAdd);
+    }
+
+    private void hideAddButton()
+    {
+        btnAdd.setVisible(false);
+    }
+
+    private void showAddButton()
+    {
+        btnAdd.setVisible(true);
     }
 
     public Map<Ingredient, Number> getRecipe()
@@ -225,5 +262,45 @@ public class RecipeBuilder extends JPanel
 
             i++;
         }
+    }
+
+    private void updateComboBoxItems(boolean justAdded)
+    {
+        for (int i = 0; i < rows.size(); i++)
+        {
+            JComboBox comboBox = (JComboBox)rows.get(i)[(i == 0) ? 1 : 2];
+
+            for (int j = 0; j < comboBox.getItemCount(); j++)
+            {
+                if (selectedIngredients.contains(comboBox.getItemAt(j)) && comboBox.getSelectedItem() != comboBox.getItemAt(j))
+                {
+                    comboBox.removeItemAt(j);
+                }
+            }
+
+            if (!justAdded)
+                loadComboBoxItems(comboBox);
+        }
+    }
+
+    private void loadComboBoxItems(JComboBox comboBox)
+    {
+        List<Ingredient> items = (List<Ingredient>)view.getParser().getData("Ingredients");
+
+        List<Ingredient> loadedItems = new ArrayList<>();
+
+        for (int i = 0; i < comboBox.getItemCount(); i++)
+        {
+            loadedItems.add((Ingredient)comboBox.getItemAt(i));
+        }
+
+        for (Ingredient ingredient : items)
+        {
+            if (!selectedIngredients.contains(ingredient) && !loadedItems.contains(ingredient))
+                comboBox.addItem(ingredient);
+        }
+
+        if (!selectedIngredients.contains(comboBox.getSelectedItem()))
+            selectedIngredients.add((Ingredient)comboBox.getSelectedItem());
     }
 }
