@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
+// DishForm class - Daniel Best, 2019
 public class DishForm extends EntryForm
 {
     private Dish dish = null;

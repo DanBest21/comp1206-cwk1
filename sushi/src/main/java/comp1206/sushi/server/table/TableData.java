@@ -7,6 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.lang.reflect.Method;
 import java.util.*;
 
+// TableData class - Daniel Best, 2019
 public class TableData
 {
     private static ServerInterface server;
@@ -148,6 +149,10 @@ public class TableData
                     else if (column.equals("Price"))
                     {
                         field = String.format("£%.2f", Double.parseDouble(output.toString()));
+                    }
+                    else if (column.equals("Distance"))
+                    {
+                        field = (output.toString().equals("")) ? output.toString() : output.toString() + " metres";
                     }
                     else
                     {

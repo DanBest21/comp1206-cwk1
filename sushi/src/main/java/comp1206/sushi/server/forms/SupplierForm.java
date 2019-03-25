@@ -7,6 +7,7 @@ import comp1206.sushi.server.table.TableView;
 
 import javax.swing.*;
 
+// SupplierForm class - Daniel Best, 2019
 public class SupplierForm extends EntryForm
 {
     public SupplierForm(ServerInterface server, TableView view, String formName)

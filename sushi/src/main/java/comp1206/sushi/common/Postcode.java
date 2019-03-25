@@ -1,9 +1,14 @@
 package comp1206.sushi.common;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import comp1206.sushi.common.Postcode;
+import org.json.*;
 
 public class Postcode extends Model {
 
@@ -40,18 +45,55 @@ public class Postcode extends Model {
 		return this.latLong;
 	}
 	
-	protected void calculateDistance(Restaurant restaurant) {
-		//This function needs implementing
+	protected void calculateDistance(Restaurant restaurant)
+	{
 		Postcode destination = restaurant.getLocation();
-		this.distance = Integer.valueOf(0);
+
+		// *******************************************************************************************************************************
+		// * Title: Adapted lat/long distance calculator method
+		// * Author: David George
+		// * Date: 28/05/2013
+		// * Availability: https://stackoverflow.com/questions/3694380/calculating-distance-between-two-points-using-latitude-longitude/
+		// ******************************************************************************************************************************/
+		final int R = 6371; // Radius of the earth
+
+		double lat1 = destination.latLong.get("lat");
+		double lon1 = destination.latLong.get("long");
+
+		double lat2 = latLong.get("lat");
+		double lon2 = latLong.get("long");
+
+		double latDistance = Math.toRadians(lat2 - lat1);
+		double lonDistance = Math.toRadians(lon2 - lon1);
+		double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+				+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+				* Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		double distance = R * c * 1000; // convert to meters
+
+		distance = Math.pow(distance, 2);
+
+		this.distance = Double.parseDouble(String.format("%.2f", Math.sqrt(distance)));
 	}
 	
-	protected void calculateLatLong() {
-		//This function needs implementing
-		this.latLong = new HashMap<String,Double>();
-		latLong.put("lat", 0d);
-		latLong.put("lon", 0d);
-		this.distance = new Integer(0);
+	protected void calculateLatLong()
+	{
+		this.latLong = new HashMap<>();
+
+		try
+		{
+			URL requestURL = new URL("https://www.southampton.ac.uk/~ob1a12/postcode/postcode.php?postcode=" + name.replace(" ", ""));
+			URLConnection connection = requestURL.openConnection();
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+			JSONObject jsonPostcode = new JSONObject(in.readLine());
+
+			latLong.put("lat", Double.parseDouble(String.format("%.6f", Double.parseDouble(jsonPostcode.get("lat").toString()))));
+			latLong.put("long", Double.parseDouble(String.format("%.6f", Double.parseDouble(jsonPostcode.get("long").toString()))));
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+		}
 	}
-	
 }

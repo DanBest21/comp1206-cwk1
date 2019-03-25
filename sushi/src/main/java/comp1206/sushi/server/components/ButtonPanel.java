@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+// ButtonPanel class - Daniel Best, 2019
 public class ButtonPanel extends JPanel
 {
     private TableView view;
@@ -62,6 +63,10 @@ public class ButtonPanel extends JPanel
 
             case "Orders":
             case "Users":
+                buttons = new JButton[1];
+                buttons[0] = new JButton("Remove " + name);
+                break;
+
             case "Map":
             case "Configuration":
                 buttons = new JButton[0];

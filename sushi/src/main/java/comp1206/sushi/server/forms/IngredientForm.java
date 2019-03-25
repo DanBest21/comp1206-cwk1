@@ -1,6 +1,5 @@
 package comp1206.sushi.server.forms;
 
-import comp1206.sushi.common.Dish;
 import comp1206.sushi.common.Ingredient;
 import comp1206.sushi.common.Supplier;
 import comp1206.sushi.server.ServerInterface;
@@ -8,6 +7,7 @@ import comp1206.sushi.server.table.TableView;
 
 import javax.swing.*;
 
+// IngredientForm class - Daniel Best, 2019
 public class IngredientForm extends EntryForm
 {
     private Ingredient ingredient = null;

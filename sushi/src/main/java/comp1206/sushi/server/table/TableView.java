@@ -1,7 +1,9 @@
 package comp1206.sushi.server.table;
 
 import comp1206.sushi.server.ServerInterface;
+import comp1206.sushi.server.ServerWindow;
 import comp1206.sushi.server.configuration.ServerConfiguration;
+import comp1206.sushi.server.map.MapView;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -11,27 +13,49 @@ import java.util.*;
 
 public class TableView extends JTabbedPane
 {
-    private static HashMap<String, JScrollPane> tabs = new HashMap<>();
+    private HashMap<String, Container> tabs = new HashMap<>();
     private static TableParser parser;
+    private static ServerWindow window;
 
-    public TableView(String[] tabs, ServerInterface server)
+    // TableView class - Daniel Best, 2019
+    public TableView(String[] tabs, ServerInterface server, ServerWindow window)
     {
+        this.window = window;
+
         parser = new TableParser(server);
         setBackground(Color.WHITE);
 
         for (String tab : tabs)
         {
-            JScrollPane table = generateTable(tab);
-            TableView.tabs.put(tab, table);
-            this.addTab(tab, TableView.tabs.get(tab));
+            if (tab == "Map")
+            {
+                MapView mapView = new MapView(server);
+                this.tabs.put(tab, mapView);
+            }
+            else
+            {
+                JScrollPane table = generateTable(tab);
+                this.tabs.put(tab, table);
+            }
 
-            this.setOpaque(false);
-            this.setFont(ServerConfiguration.getSmallTitleFont());
+            addTab(tab, this.tabs.get(tab));
+
+            setOpaque(false);
+            setFont(ServerConfiguration.getSmallTitleFont());
         }
+
+        addChangeListener(e -> {
+            if (this.tabs.get("Map") == getSelectedComponent())
+                window.setupForMapView();
+            else
+                window.setResizable(true);
+        });
     }
 
     private JScrollPane generateTable(String tab)
     {
+        window.setResizable(true);
+
         DefaultTableModel model = new DefaultTableModel();
         JTable table = new JTable(model);
 

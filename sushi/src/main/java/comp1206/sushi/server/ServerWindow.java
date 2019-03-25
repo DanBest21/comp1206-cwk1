@@ -81,12 +81,18 @@ public class ServerWindow extends JFrame implements UpdateListener {
 		panel.setLayout(new BorderLayout());
 		panel.setBackground(Color.WHITE);
 
-		view = new TableView(ServerConfiguration.getTabs(), server);
+		view = new TableView(ServerConfiguration.getTabs(), server, this);
 		panel.add(view, BorderLayout.CENTER);
 
 		JPanel btnPanel = new ButtonPanel(view, server);
 		panel.add(btnPanel, BorderLayout.SOUTH);
 
 		view.addChangeListener(e -> ((ButtonPanel) btnPanel).generateButtons());
+	}
+
+	public void setupForMapView()
+	{
+		setSize(ServerConfiguration.getMapWidth() + 15, ServerConfiguration.getMapHeight() + 75);
+		setResizable(false);
 	}
 }

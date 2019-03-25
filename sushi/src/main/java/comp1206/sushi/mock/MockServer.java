@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
-
-import javax.swing.JOptionPane;
 
 import comp1206.sushi.common.*;
 import comp1206.sushi.server.ServerInterface;
@@ -288,7 +285,7 @@ public class MockServer implements ServerInterface {
 
 	@Override
 	public Postcode addPostcode(String code) {
-		Postcode mock = new Postcode(code);
+		Postcode mock = new Postcode(code, restaurant);
 		this.postcodes.add(mock);
 		this.notifyUpdate();
 		return mock;
@@ -428,6 +425,4 @@ public class MockServer implements ServerInterface {
 	public Postcode getRestaurantPostcode() {
 		return restaurant.getLocation();
 	}
-
-
 }

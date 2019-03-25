@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+// RecipeBuilder class - Daniel Best, 2019
 public class RecipeBuilder extends JPanel
 {
     private List<Component[]> rows = new ArrayList<>();

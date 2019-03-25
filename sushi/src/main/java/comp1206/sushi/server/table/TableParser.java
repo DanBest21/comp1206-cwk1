@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+// TableParser class - Daniel Best, 2019
 public class TableParser
 {
     private static HashMap<String, List<? extends Model>> loadedData = new HashMap<>();
@@ -71,17 +72,18 @@ public class TableParser
                 break;
 
             case "Map":
-                // TODO: Implement Map case.
                 break;
 
             case "Configuration":
                 break;
+
+            default:
+                displayErrorMessage("The tab \"" + type + "\" is not recognised.", false);
         }
 
         return data;
     }
 
-    // TODO: Add validation for special cases.
     public boolean removeRow(String tab, JTable table)
     {
         switch (tab)
@@ -101,7 +103,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    displayErrorMessage(ex.getMessage());
+                    displayErrorMessage(ex.getMessage(), true);
                     return false;
                 }
                 break;
@@ -113,7 +115,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    displayErrorMessage(ex.getMessage());
+                    displayErrorMessage(ex.getMessage(), true);
                     return false;
                 }
                 break;
@@ -125,7 +127,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    displayErrorMessage(ex.getMessage());
+                    displayErrorMessage(ex.getMessage(), true);
                     return false;
                 }
                 break;
@@ -137,7 +139,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    displayErrorMessage(ex.getMessage());
+                    displayErrorMessage(ex.getMessage(), true);
                     return false;
                 }
                 break;
@@ -157,7 +159,7 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    displayErrorMessage(ex.getMessage());
+                    displayErrorMessage(ex.getMessage(), true);
                     return false;
                 }
                 break;
@@ -169,7 +171,36 @@ public class TableParser
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
                 {
-                    displayErrorMessage(ex.getMessage());
+                    displayErrorMessage(ex.getMessage(), true);
+                    return false;
+                }
+                break;
+
+            case "Users":
+                try
+                {
+                    server.removeUser(getModel(tab, table));
+                }
+                catch (ServerInterface.UnableToDeleteException ex)
+                {
+                    displayErrorMessage(ex.getMessage(), true);
+                    return false;
+                }
+                break;
+
+            case "Orders":
+                try
+                {
+                    Order order = getModel(tab, table);
+
+                    if (!order.getStatus().toLowerCase().contains("complete"))
+                        throw new ServerInterface.UnableToDeleteException("The selected order is still in progress.\r\nAn order may only be deleted once it is complete.");
+
+                    server.removeOrder(order);
+                }
+                catch (ServerInterface.UnableToDeleteException ex)
+                {
+                    displayErrorMessage(ex.getMessage(), true);
                     return false;
                 }
                 break;
@@ -184,8 +215,11 @@ public class TableParser
         return (T)objects.get(table.getSelectedRow());
     }
 
-    private void displayErrorMessage(String message)
+    private void displayErrorMessage(String message, boolean userIssue)
     {
-        JOptionPane.showMessageDialog(new JDialog(), message + "\r\nPlease correct this issue and then try again.", "Remove Error", JOptionPane.ERROR_MESSAGE);
+        if (userIssue)
+            JOptionPane.showMessageDialog(new JDialog(), message + "\r\nPlease correct this issue and then try again.", "Remove Error", JOptionPane.ERROR_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(new JDialog(), message + "\r\nPlease contact an administrator.", "Remove Error", JOptionPane.ERROR_MESSAGE);
     }
 }

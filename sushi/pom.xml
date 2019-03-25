@@ -63,6 +63,17 @@
           <version>3.8.2</version>
           <scope>test</scope>
       </dependency>
+      <!-- *******************************************************************************************************
+      // * Title: Org.JSON library
+      // * Author: Douglas Crockford
+      // * Date: August 2018
+      // * Availability: https://mvnrepository.com/artifact/org.json/json/20180813
+      // ********************************************************************************************************/ -->
+      <dependency>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20180813</version>
+      </dependency>
   </dependencies>
   <description>Sushi Coursework for COMP1206</description>
 </project>

@@ -13,6 +13,7 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
+// EntryForm class - Daniel Best, 2019
 public abstract class EntryForm extends JDialog
 {
     private ServerInterface server;

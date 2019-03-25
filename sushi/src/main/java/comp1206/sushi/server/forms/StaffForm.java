@@ -1,12 +1,12 @@
 package comp1206.sushi.server.forms;
 
-import comp1206.sushi.common.Dish;
 import comp1206.sushi.common.Staff;
 import comp1206.sushi.server.ServerInterface;
 import comp1206.sushi.server.table.TableView;
 
 import javax.swing.*;
 
+// StaffForm class - Daniel Best, 2019
 public class StaffForm extends EntryForm
 {
     public StaffForm(ServerInterface server, TableView view, String formName)
