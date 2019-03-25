@@ -194,7 +194,7 @@ public class TableData
                     Map.Entry entry = (Map.Entry)iterator.next();
                     String key = (String)entry.getKey();
                     Double value = (Double)entry.getValue();
-                    formattedOutput = formattedOutput + (key == "lon" ? "Longitude" : "Latitude") + ": " + value.toString() + (iterator.hasNext() ? "<br>" : "");
+                    formattedOutput = formattedOutput + (key == "long" ? "Longitude" : "Latitude") + ": " + value.toString() + (iterator.hasNext() ? "<br>" : "");
                 }
                 break;
         }

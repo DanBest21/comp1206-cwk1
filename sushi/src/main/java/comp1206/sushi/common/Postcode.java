@@ -1,7 +1,6 @@
 package comp1206.sushi.common;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -9,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.json.*;
+
+import javax.swing.*;
 
 public class Postcode extends Model {
 
@@ -44,7 +45,7 @@ public class Postcode extends Model {
 	public Map<String,Double> getLatLong() {
 		return this.latLong;
 	}
-	
+
 	protected void calculateDistance(Restaurant restaurant)
 	{
 		Postcode destination = restaurant.getLocation();
@@ -91,9 +92,10 @@ public class Postcode extends Model {
 			latLong.put("lat", Double.parseDouble(String.format("%.6f", Double.parseDouble(jsonPostcode.get("lat").toString()))));
 			latLong.put("long", Double.parseDouble(String.format("%.6f", Double.parseDouble(jsonPostcode.get("long").toString()))));
 		}
-		catch (IOException ex)
+		catch (Exception ex)
 		{
-			ex.printStackTrace();
+			JOptionPane.showMessageDialog(new JDialog(), "Error: " + ex.getMessage() + "\r\nThis likely means that the entered postcode is invalid. Please ensure that your input is correct and try again.", "Input Error", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
 	}
 }
