@@ -27,12 +27,55 @@
                         <mainClass>comp1206.sushi.Launcher</mainClass>
                     </manifest>
                 </archive>
+         </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>copy-dependencies</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        <overWriteReleases>false</overWriteReleases>
+                        <overWriteSnapshots>false</overWriteSnapshots>
+                        <overWriteIfNewer>true</overWriteIfNewer>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <classpathPrefix>lib/</classpathPrefix>
+                        <mainClass>comp1206.sushi.Launcher</mainClass>
+                    </manifest>
+                </archive>
             </configuration>
         </plugin>
       </plugins>
 </build>
 
   <dependencies>
+  <!-- *******************************************************************************************************
+    // * Title: Org.JSON library
+    // * Author: Douglas Crockford
+    // * Date: August 2018
+    // * Availability: https://mvnrepository.com/artifact/org.json/json/20180813
+    // ********************************************************************************************************/ -->
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20180813</version>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -62,17 +105,6 @@
           <artifactId>junit</artifactId>
           <version>3.8.2</version>
           <scope>test</scope>
-      </dependency>
-      <!-- *******************************************************************************************************
-      // * Title: Org.JSON library
-      // * Author: Douglas Crockford
-      // * Date: August 2018
-      // * Availability: https://mvnrepository.com/artifact/org.json/json/20180813
-      // ********************************************************************************************************/ -->
-      <dependency>
-          <groupId>org.json</groupId>
-          <artifactId>json</artifactId>
-          <version>20180813</version>
       </dependency>
   </dependencies>
   <description>Sushi Coursework for COMP1206</description>
