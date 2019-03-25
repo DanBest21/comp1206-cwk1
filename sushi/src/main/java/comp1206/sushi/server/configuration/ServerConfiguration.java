@@ -9,7 +9,7 @@ public final class ServerConfiguration
     private static final Color RED = new Color(170, 50, 50);
     private static final Font TITLE_FONT = new Font("Viner Hand ITC", Font.BOLD, 20);
     private static final Font FONT = new Font("Courier New", Font.PLAIN, 16);
-    private static final ImageIcon IMG = new ImageIcon("src/main/resources/icon.png");
+    private static final ImageIcon IMG = new ImageIcon(ServerConfiguration.class.getClassLoader().getClass().getResource("/icon.png"));
     private static final int MAP_WIDTH = (1195 * 75) / 100;
     private static final int MAP_HEIGHT = (1218 * 75) / 100;
     private static final double[] MAP_LAT_BOUNDARIES = new double[]{50.9657, 50.8814};
