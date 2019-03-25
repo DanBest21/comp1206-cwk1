@@ -135,6 +135,14 @@ public class TableParser
             case "Suppliers":
                 try
                 {
+                    Supplier supplier = getModel(tab, table);
+
+                    for (Ingredient ingredient : server.getIngredients())
+                    {
+                        if (ingredient.getSupplier().equals(supplier))
+                            throw new ServerInterface.UnableToDeleteException("Unable to delete supplier \"" + supplier.getName() + "\", as the ingredient \"" + ingredient.getName() + "\" is dependent upon it.");
+                    }
+
                     server.removeSupplier(getModel(tab, table));
                 }
                 catch (ServerInterface.UnableToDeleteException ex)
